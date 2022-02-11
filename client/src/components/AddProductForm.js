@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { React, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createProduct } from '../actions/products';
@@ -23,19 +22,19 @@ function AddProductForm() {
     setQuantity("");
   };
 
-  const handleSubmit = async () => {
-    try {
-      const res = await axios.post("/api/products", {
-        title: productName,
-        price: price,
-        quantity: quantity
-      });
-      dispatch(createProduct(res.data));
+  const handleSubmit = () => {
+    const cleanUp = () => {
       toggleFormVisibility();
       resetInputs();
-    } catch (error) {
-      console.log("Something went wrong with the request.");
-    }
+    };
+    
+    const newProduct = {
+      title: productName,
+      price: price,
+      quantity: quantity
+    };
+
+    dispatch(createProduct(newProduct, cleanUp));
   };
 
   return (

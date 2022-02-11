@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import axios from 'axios';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import EditableProduct from "./EditableProduct";
@@ -10,12 +9,7 @@ function Products() {
   const products = useSelector((state) => state.products);
 
   useEffect(() => {
-    const getProducts = async () => {
-      const response = await axios.get('/api/products');
-      const data = response.data;
-      dispatch(productsReceived(data));
-    };
-    getProducts();
+    dispatch(productsReceived());
   }, [dispatch]);
 
   return (

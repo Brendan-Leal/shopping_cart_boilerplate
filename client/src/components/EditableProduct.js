@@ -1,23 +1,17 @@
 import React, { useState } from 'react';
 import EditProductForm from './EditProductForm';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { itemAdded } from "../actions/cart";
-import { deleteProduct } from "../actions/products"
+import { deleteProduct } from "../actions/products";
 
 function EditableProduct({ _id, title, price, quantity }) {
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
-    axios({
-      method: 'post',
-      url: '/api/add-to-cart',
-      data: {
-        productId: _id
-      }
-    }).then((r) => {
-      dispatch(itemAdded(r.data));
-    });
+    const productData = {
+      productId: _id
+    };
+    dispatch(itemAdded(productData));
 
   };
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -26,13 +20,8 @@ function EditableProduct({ _id, title, price, quantity }) {
     setIsFormVisible(!isFormVisible);
   };
 
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`/api/products/${_id}`);
-      dispatch(deleteProduct(_id));
-    } catch (error) {
-      throw error;
-    }
+  const handleDelete = () => {
+    dispatch(deleteProduct(_id));
   };
 
   return (

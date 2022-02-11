@@ -1,5 +1,4 @@
 import { React, useState } from 'react';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { editProduct } from "../actions/products";
 
@@ -11,18 +10,14 @@ function EditProductForm({ handleFormToggle, _id, title, price, quantity }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios({
-      method: 'put',
-      url: `/api/products/${_id}`,
-      data: {
-        title: formTitle,
-        price: formPrice,
-        quantity: formQuantity
-      }
-    }).then(response => {
-      dispatch(editProduct(response.data));
-      handleFormToggle();
-    });
+
+    let data = {
+      title: formTitle,
+      price: formPrice,
+      quantity: formQuantity,
+    };
+
+    dispatch(editProduct(data, _id, handleFormToggle));
   };
 
   return (

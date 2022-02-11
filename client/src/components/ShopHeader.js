@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React from 'react';
 import CartItem from './CartItem';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,25 +9,11 @@ const ShopHeader = () => {
   let cart = useSelector(state => state.cart);
 
   const handleCheckout = async () => {
-    try {
-      await axios.post("/api/checkout");
-      dispatch(checkout())
-    } catch (error) {
-      console.log("Something went wrong in the checkout");
-      throw error;
-    }
+    dispatch(checkout());
   };
 
   useEffect(() => {
-    const getCart = async () => {
-      try {
-        const res = await axios.get("/api/cart");
-        dispatch(cartReceived(res.data));
-      } catch (error) {
-        throw error;
-      }
-    };
-    getCart();
+    dispatch(cartReceived());
   }, [dispatch]);
 
   return (
