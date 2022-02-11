@@ -1,6 +1,7 @@
 import { React, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
+import { editProduct } from "../actions/products";
 
 function EditProductForm({ handleFormToggle, _id, title, price, quantity }) {
   const [formTitle, setFormTitle] = useState(title);
@@ -19,7 +20,7 @@ function EditProductForm({ handleFormToggle, _id, title, price, quantity }) {
         quantity: formQuantity
       }
     }).then(response => {
-      dispatch({ type: 'EDIT_PRODUCT', payload: { updatedProduct: response.data } });
+      dispatch(editProduct(response.data));
       handleFormToggle();
     });
   };

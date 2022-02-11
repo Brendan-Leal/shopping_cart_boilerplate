@@ -11,3 +11,11 @@ export const createProduct = (data) => {
     payload: { newProduct: data }
   };
 };
+
+export const deleteProduct = (id) => {
+  return { type: 'DELETE_PRODUCT', payload: { productId: id } };
+};
+
+export const editProduct = (data) => {
+  return { type: 'EDIT_PRODUCT', payload: { updatedProduct: data } };
+};
