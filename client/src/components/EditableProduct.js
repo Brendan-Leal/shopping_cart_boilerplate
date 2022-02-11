@@ -1,27 +1,20 @@
 import React, { useState } from 'react';
 import EditProductForm from './EditProductForm';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
-function EditableProduct({ _id, title, price, quantity, setCart, cart, products, setProducts }) {
+function EditableProduct({ _id, title, price, quantity }) {
+  const dispatch = useDispatch();
+
   const handleAddToCart = () => {
-    console.log("_id: ", _id);
-    console.log("quant: ", quantity);
-    console.log("cart: ", cart);
-
     axios({
       method: 'post',
       url: '/api/add-to-cart',
       data: {
         productId: _id
       }
-    }).then((r) => { // FIXME: Do not need additional req.
-      console.log("data: ", r.data);
-      axios({
-        method: 'get',
-        url: '/api/cart',
-      }).then(response => {
-        setCart(response.data);
-      });
+    }).then((r) => {
+      dispatch({ type: "ADD_TO_CART", payload: { cartItem: r.data.item, updatedProduct: r.data.product } });
     });
 
   };
@@ -33,14 +26,8 @@ function EditableProduct({ _id, title, price, quantity, setCart, cart, products,
 
   const handleDelete = async () => {
     try {
-      const res = await axios.delete(`/api/products/${_id}`);
-
-      let newProductsList = products.slice();
-      const indexOfItemToDelete = newProductsList.findIndex(prod => {
-        return prod._id === _id;
-      });
-      newProductsList.splice(indexOfItemToDelete, 1);
-      setProducts(newProductsList);
+      await axios.delete(`/api/products/${_id}`);
+      dispatch({ type: 'DELETE_PRODUCT', payload: { productId: _id } });
     } catch (error) {
       throw error;
     }
@@ -60,21 +47,20 @@ function EditableProduct({ _id, title, price, quantity, setCart, cart, products,
               title={title}
               price={price}
               quantity={quantity}
-              _id={_id} products={products}
-              setProducts={setProducts}
+              _id={_id}
               handleFormToggle={toggleFormVisibility}
             /> :
             <>
               <a
-                onClick={quantity === 0 ? null : handleAddToCart}
+                href="/#" onClick={quantity === 0 ? null : handleAddToCart}
                 className={"button add-to-cart" + (quantity === 0 ? " disabled" : "")}
               >
                 Add to Cart</a>
-              <a onClick={toggleFormVisibility} className="button edit">Edit</a>
+              <a href="/#" onClick={toggleFormVisibility} className="button edit">Edit</a>
             </>
           }
         </div>
-        <a onClick={handleDelete} className="delete-button"><span>X</span></a>
+        <a href="/#" onClick={handleDelete} className="delete-button"><span>X</span></a>
       </div>
     </div>
   );

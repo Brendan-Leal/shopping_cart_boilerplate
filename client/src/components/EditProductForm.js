@@ -1,10 +1,12 @@
 import { React, useState } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
-function EditProductForm({ handleFormToggle, _id, title, price, quantity, products, setProducts }) {
+function EditProductForm({ handleFormToggle, _id, title, price, quantity }) {
   const [formTitle, setFormTitle] = useState(title);
   const [formPrice, setFormPrice] = useState(price);
   const [formQuantity, setFormQuantity] = useState(quantity);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,12 +19,7 @@ function EditProductForm({ handleFormToggle, _id, title, price, quantity, produc
         quantity: formQuantity
       }
     }).then(response => {
-      let newProducts = products.slice();
-      let product = products.find(product => product._id === _id);
-      product.title = response.data.title;
-      product.price = response.data.price;
-      product.quantity = response.data.quantity;
-      setProducts(newProducts);
+      dispatch({ type: 'EDIT_PRODUCT', payload: { updatedProduct: response.data } });
       handleFormToggle();
     });
   };
@@ -47,8 +44,8 @@ function EditProductForm({ handleFormToggle, _id, title, price, quantity, produc
         </div>
 
         <div className="actions form-actions">
-          <a onClick={handleSubmit} className="button" >Update</a>
-          <a onClick={handleFormToggle} className="button">Cancel</a>
+          <a href="/#" onClick={handleSubmit} className="button" >Update</a>
+          <a href='/#' onClick={handleFormToggle} className="button">Cancel</a>
         </div>
       </form>
     </div>

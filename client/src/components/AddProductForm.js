@@ -1,15 +1,18 @@
 import axios from 'axios';
 import { React, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { createProduct } from '../actions/products';
 
-function AddProductForm({ products, setProducts }) {
+function AddProductForm() {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  const dispatch = useDispatch();
+
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
   };
-
   const handleCancelClick = () => {
     toggleFormVisibility();
     resetInputs();
@@ -27,11 +30,7 @@ function AddProductForm({ products, setProducts }) {
         price: price,
         quantity: quantity
       });
-
-      let newProductsList = products.slice();
-      newProductsList.push(res.data);
-      setProducts(newProductsList);
-
+      dispatch(createProduct(res.data));
       toggleFormVisibility();
       resetInputs();
     } catch (error) {
@@ -41,7 +40,7 @@ function AddProductForm({ products, setProducts }) {
 
   return (
     <div className={`add-form  ${isFormVisible ? "visible" : null}`} >
-      <p><a onClick={toggleFormVisibility} className="button add-product-button">Add A Product</a></p>
+      <p><a href="/#" onClick={toggleFormVisibility} className="button add-product-button">Add A Product</a></p>
       <h3>Add Product</h3>
       <form>
         <div className="input-group">
@@ -65,8 +64,8 @@ function AddProductForm({ products, setProducts }) {
         </div>
 
         <div className="actions form-actions">
-          <a onClick={handleSubmit} className="button">Add</a>
-          <a onClick={handleCancelClick} className="button">Cancel</a>
+          <a href="/#" onClick={handleSubmit} className="button">Add</a>
+          <a href="/#" onClick={handleCancelClick} className="button">Cancel</a>
         </div>
       </form>
     </div >
